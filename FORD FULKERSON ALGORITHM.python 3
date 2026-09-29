@@ -1,0 +1,35 @@
+from collections import deque
+n, e = map(int, input().split())
+g = [[0]*n for _ in range(n)]
+for _ in range(e):
+    u, v, c = map(int, input().split())
+    g[u][v] += c
+ans = 0
+while 1:
+    p = [-1]*n
+    p[0] = 0
+    q = deque([0])
+    while q and p[n-1] < 0:
+        u = q.popleft()
+        for v in range(n):
+            if p[v] < 0 and g[u][v]:
+                p[v] = u
+                q.append(v)
+
+    if p[n-1] < 0:
+        break
+    f = 10**18
+    v = n-1
+    while v:
+        u = p[v]
+        f = min(f, g[u][v])
+        v = u
+    v = n-1
+    while v:
+        u = p[v]
+        g[u][v] -= f
+        g[v][u] += f
+        v = u
+    ans += f
+print(ans)
+
